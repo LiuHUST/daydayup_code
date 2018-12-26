@@ -25,8 +25,7 @@ from matplotlib.colors import rgb2hex
 from sklearn.cluster import DBSCAN
 import os
 
-pd.set_option('max_columns',80)
-
+# plot recommendation_model's result
 def DrawPointMap(lat,lon,val,hour):
     colors = {}  
     cmap = plt.cm.RdYlBu_r
@@ -39,10 +38,10 @@ def DrawPointMap(lat,lon,val,hour):
     for info, shp in zip(map.states_info, map.states):
         proid = info['NAME_1']
         if proid == 'Shanghai':
-            poly = Polygon(shp,facecolor='w',edgecolor='k', lw=1.0, alpha=0.1)#注意设置透明度alpha，否则点会被地图覆盖
+            poly = Polygon(shp,facecolor='w',edgecolor='k', lw=1.0, alpha=0.1)
             ax1.add_patch(poly)		
     # plot the regional boundary
-    map.drawmapboundary()  #边界线
+    map.drawmapboundary()  
     map.drawstates()        
     map.drawcountries() 
     # plot the parallels and meridians
@@ -55,7 +54,8 @@ def DrawPointMap(lat,lon,val,hour):
     map.scatter(x, y,s=20, c = colors,vmin=0, vmax=50,cmap=cmap) 
     plt.title('recommended place at %d:00' % hour)# title
     plt.show()
-    
+
+# plot the map of (31.20~31.25,121.5~121.55)   
 def DrawPointMap_cluster(lat,lon,val,hour):
     colors = {}  
     cmap = plt.cm.RdYlBu
@@ -85,7 +85,6 @@ def DrawPointMap_cluster(lat,lon,val,hour):
     map.scatter(x, y,s=20, c = colors,cmap=cmap) 
     plt.title('Shanghai(31.20~31.25,121.5~121.55) at %d:00' % hour)# tile
     plt.show()
-
 
 # Plot the number of passengers at various times of the day
 def plot_hour_passenger(taxi_data):
@@ -155,7 +154,7 @@ if __name__ == '__main__':
     taxi_data = pd.read_csv('taxi_all.csv')
     taxi_data.columns = ['id','time','lon','lat','speed','angle','is_vacant']
     print(taxi_data.info())
-    taxi_data['time'] = pd.to_datetime(taxi_data['time'])#转化开始时间
+    taxi_data['time'] = pd.to_datetime(taxi_data['time'])
     taxi_data['hour']= taxi_data['time'].dt.hour
     #Determine if the location is a passenger point
     taxi_data = is_passenger_location(taxi_data)
